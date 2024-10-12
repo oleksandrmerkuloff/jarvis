@@ -12,12 +12,12 @@ Libs: json, datetime
 
 Main class - Jarvis:
     methods:
-        Create task - collect_data and save it to Jarvis.tasks_dict + ask user about update json_data_file 
-        Update task - get task_id, column and new data, update it in Jarvis.tasks_dict and ask user about update json_data_file
+        Create task - collect_data and save it to Jarvis.tasks_dict + ask user about update json_data_file DONE!!!
+        Update task - get task_id, column and new data, update it in Jarvis.tasks_dict and ask user about update json_data_file DONE!!!
         show tasks list with optional like sorting=True/False, and show only option(status=status, or theme=theme)
         mainloop or run - cycle for waiting user commands
-        collect_data - get data from user and return data_dict
-        write_to_json/save_to_json - write_data to json, calls if user want to exit from app,
+        collect_data - get data from user and return data_dict DONE!!!
+        write_to_json/save_to_json - write_data to json, calls if user want to exit from app, DONE!!!
         like json_file != Jarvis.tasks_dict(you have unsaved data, want to save it?)
         or 'save' command from user afrer create task methods, but after update json file need to refresh Jarvis.tasks dict
         read_from_json - read_data_from json and save it to Jarvis.tasks_dict 
@@ -25,4 +25,7 @@ Main class - Jarvis:
 Single task data:
     id, title, contant(description), status, theme, created_date, updated_date
 
+PATCH
 Add settings like autodatafile update
+create run method with main loop
+fix task_id, need integer value in json, now I have str
