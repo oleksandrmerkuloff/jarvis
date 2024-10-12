@@ -8,51 +8,49 @@ BASE_DIR = os.path.dirname(__file__)
 
 class Jarvis:
     def __init__(self) -> None:
-        self.my_tasks = self.read_tasks()
+        self.tasks = {}
 
-    def read_tasks(self):
-        with open(BASE_DIR + '/tasks.json', 'r') as data_file:
-            return json.load(data_file)
-
-    def get_current_date(self):
-        return datetime.now().strftime('%Y:%m:%d %H:%M')
-
-    def collect_data(self):
+    def collect_task_data(self):
         title = input("Enter task title: ")
-        content = input("Enter task content: ")
+        description = input("Enter task description: ")
         status = input("Enter task status: ")
-        theme = input("Enter task theme(optional): ")
+        theme = input("Enter task theme: ")
         data = {
             'title': title,
-            'content': content,
+            'description': description,
             'status': status,
             'theme': theme,
-            'creation_date': self.get_current_date(),
-            'updated_date': self.get_current_date()
+            'created_date': datetime.now().strftime('%Y:%m:%d %H:%M'),
+            'updated_date': datetime.now().strftime('%Y:%m:%d %H:%M')
         }
         return data
 
     def create_task(self):
-        task_data = self.collect_data()
-        if self.my_tasks.keys():
-            new_task_id = int(list(self.my_tasks.keys())[-1]) + 1
+        task_data = self.collect_task_data()
+        if self.tasks.keys():
+            task_id = max(self.tasks) + 1
         else:
-            new_task_id = 1
-        self.my_tasks[new_task_id] = task_data
-        return 'Task was added'
+            task_id = 1
+        self.tasks[task_id] = task_data
 
-    def update_task(self, id, column, new_data):
-        self.my_tasks[id][column] = new_data
-        self.my_tasks[id]['updated_date'] = self.get_current_date()
+    def update_task(self, task_id):
+        print('Columns: title, description, status, theme')
+        to_update = input('Enter what column whould you like to update: ').lower()
 
-    def write_to_json(self, data):
-        with open(BASE_DIR + '/tasks.json', 'w') as data_file:
-            json.dump(data, data_file)
+        if to_update not in self.tasks[task_id].keys():
+            print("Wrong column, try again")
+            return False
+
+        new_data = input('Write new data for this column: ')
+        self.tasks[task_id][to_update] = new_data
+        return True
 
 
 if __name__ == "__main__":
     jar = Jarvis()
     jar.create_task()
-    jar.write_to_json(jar.my_tasks)
-    print(jar.my_tasks)
-    # print(BASE_DIR)
+    print(jar.tasks)
+    jar.create_task()
+    print(jar.tasks)
+    jar.update_task(2)
+    print(jar.tasks)
