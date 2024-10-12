@@ -9,6 +9,13 @@ BASE_DIR = os.path.dirname(__file__)
 class Jarvis:
     def __init__(self) -> None:
         self.tasks = self.get_tasks_data()
+        self.autoupdate_data_file = False
+
+    def data_file_update(self):
+        if self.autoupdate_data_file:
+            self.autoupdate_data_file = False
+        else:
+            self.autoupdate_data_file = True
 
     def create_data_file(self):
         with open(BASE_DIR + '/task.json', 'w') as data_file:
@@ -51,7 +58,12 @@ class Jarvis:
             task_id = 1
         self.tasks[task_id] = task_data
 
-        self.save_tasks()
+        if self.autoupdate_data_file:
+            self.save_tasks()
+        else:
+            update_request = input('Do you want to update data file?(y/n)\n')
+            if update_request.lower() == 'y':
+                self.save_tasks()
 
     def update_task(self, task_id):
         print('Columns: title, description, status, theme')
@@ -65,7 +77,12 @@ class Jarvis:
         self.tasks[task_id][to_update] = new_data
         self.tasks[task_id]['updated_date'] = self.get_current_date()
 
-        self.save_tasks()
+        if self.autoupdate_data_file:
+            self.save_tasks()
+        else:
+            update_request = input('Do you want to update data file?(y/n)\n')
+            if update_request.lower() == 'y':
+                self.save_tasks()
 
     def run(self):
         print('Greetings, sir. My name is Jarvis.')
@@ -74,6 +91,15 @@ class Jarvis:
             user_request = input('print here: ')
             if user_request == 'create':
                 self.create_task()
+            elif user_request == 'exit':
+                if self.tasks != self.get_tasks_data() and self.autoupdate_data_file:
+                    self.save_tasks()
+                elif self.tasks != self.get_tasks_data:
+                    save_request = input('Do you want to update data file?(y/n)\n')
+                    if save_request.lower() == 'y':
+                        self.save_tasks()
+                print("If I will be need for you, just call me...")
+                break
 
 
 if __name__ == "__main__":
