@@ -12,12 +12,16 @@ class Jarvis:
     I'm currently in development and you may not have all of my features.
     Here list of command for work with me:
         'help' - show this message again;
+        'skip update' - on/off autoupdate file with tasks;
         'show' - show tasks list;
-        'settings' - show and change your settings;
         'create' - load create task algorithm;
         'update' - load update task algorithm;
+        'clear' - for clear your screen;
         'exit' - if you need to go use this command;
     """
+
+    def clear():
+        os.system('cls' if os.name == 'nt' else 'clear')
 
     def __init__(self) -> None:
         self.tasks = self.get_tasks_data()
@@ -26,8 +30,10 @@ class Jarvis:
     def data_file_update(self):
         if self.autoupdate_data_file:
             self.autoupdate_data_file = False
+            print('Autoupdate off')
         else:
             self.autoupdate_data_file = True
+            print('Autoupdate on')
 
     def create_data_file(self):
         with open(BASE_DIR + '/tasks.json', 'w') as data_file:
@@ -78,6 +84,9 @@ class Jarvis:
                 self.save_tasks()
 
     def update_task(self, task_id):
+        if not self.tasks:
+            print('I doesn\'t have any task yet!')
+            return
         print('Columns: title, description, status, theme')
         to_update = input('Enter what column whould you like to update: ').lower()
 
@@ -97,10 +106,15 @@ class Jarvis:
                 self.save_tasks()
 
     def show_tasks(self, task_status):
+        if not self.tasks:
+            print('I doesn\'t have any task yet!')
+            return
         for task_id, task in self.tasks.items():
-            if task_status != 'full' and task['status'] != task_status:
+            if (task_status != 'full' and
+               task['status'].lower() != task_status.lower()):
                 continue
             print()
+            print(f'Task id: {task_id}')
             for key, info in task.items():
                 print(f'{key.title()}: {info}')
         print()
@@ -111,6 +125,8 @@ class Jarvis:
             user_request = input('Wait for your commands here: ').lower()
             if user_request == 'help':
                 print(self.START_MESSAGE)
+            elif user_request == 'skip update':
+                self.data_file_update()
             elif user_request == 'show':
                 print('Do you want to see full list of tasks or with special status: ')
                 task_status = input('Type "full" or special status here: ')
@@ -120,6 +136,8 @@ class Jarvis:
             elif user_request == 'update':
                 task_id = input('Enter task id: ')
                 self.update_task(task_id)
+            elif user_request == 'clear':
+                Jarvis.clear()
             elif user_request == 'exit':
                 if self.tasks != self.get_tasks_data() and self.autoupdate_data_file:
                     self.save_tasks()
