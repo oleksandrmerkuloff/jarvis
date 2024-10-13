@@ -7,6 +7,17 @@ BASE_DIR = os.path.dirname(__file__)
 
 
 class Jarvis:
+    START_MESSAGE = """
+    Good day sir, my name's Jarvis and I'm your task manager.
+    I'm currently in development and you may not have all of my features.
+    Here list of command for work with me:
+        'help' - show this message again;
+        'settings' - show and change your settings;
+        'create' - load create task algorithm;
+        'update' - load update task algorithm;
+        'exit' - if you need to go use this command;
+    """
+
     def __init__(self) -> None:
         self.tasks = self.get_tasks_data()
         self.autoupdate_data_file = False
@@ -18,18 +29,18 @@ class Jarvis:
             self.autoupdate_data_file = True
 
     def create_data_file(self):
-        with open(BASE_DIR + '/task.json', 'w') as data_file:
+        with open(BASE_DIR + '/tasks.json', 'w') as data_file:
             json.dump({}, data_file)
 
     def get_tasks_data(self):
-        if not os.path.exists(BASE_DIR + '/task.json'):
+        if not os.path.exists(BASE_DIR + '/tasks.json'):
             self.create_data_file()
 
-        with open(BASE_DIR + '/task.json', 'r') as data_file:
+        with open(BASE_DIR + '/tasks.json', 'r') as data_file:
             return json.load(data_file)
 
     def save_tasks(self):
-        with open(BASE_DIR + '/task.json', 'w') as data_file:
+        with open(BASE_DIR + '/tasks.json', 'w') as data_file:
             json.dump(self.tasks, data_file)
 
     def get_current_date(self):
@@ -53,10 +64,10 @@ class Jarvis:
     def create_task(self):
         task_data = self.collect_task_data()
         if self.tasks.keys():
-            task_id = max(self.tasks) + 1
+            task_id = int(max(self.tasks)) + 1
         else:
             task_id = 1
-        self.tasks[task_id] = task_data
+        self.tasks[str(task_id)] = task_data
 
         if self.autoupdate_data_file:
             self.save_tasks()
@@ -85,21 +96,25 @@ class Jarvis:
                 self.save_tasks()
 
     def run(self):
-        print('Greetings, sir. My name is Jarvis.')
-        print('Type commands for work: <commands list>')
+        print(self.START_MESSAGE)
         while True:
-            user_request = input('print here: ')
-            if user_request == 'create':
+            user_request = input('Wait for your commands here: ').lower()
+            if user_request == 'help':
+                print(self.START_MESSAGE)
+            elif user_request == 'create':
                 self.create_task()
+            elif user_request == 'update':
+                task_id = input('Enter task id: ')
+                self.update_task(task_id)
             elif user_request == 'exit':
                 if self.tasks != self.get_tasks_data() and self.autoupdate_data_file:
                     self.save_tasks()
-                elif self.tasks != self.get_tasks_data:
+                elif self.tasks != self.get_tasks_data():
                     save_request = input('Do you want to update data file?(y/n)\n')
                     if save_request.lower() == 'y':
                         self.save_tasks()
                 print("If I will be need for you, just call me...")
-                break
+                return
 
 
 if __name__ == "__main__":

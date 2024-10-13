@@ -26,6 +26,9 @@ Single task data:
     id, title, contant(description), status, theme, created_date, updated_date
 
 PATCH
-Add settings like autodatafile update
-create run method with main loop
-fix task_id, need integer value in json, now I have str
+fix task_id, need integer value in json, now I have str DONE but cheat a little with type conversion
+create dialog structure:
+	<commands list> -> 'help' - show start message, 'create' - load create task dialog, 'update' - load update dialog, 'settings' - show and change your settings;
+create sorting and showing all tasks alghorithm
+add clean cmd func
+and cancel
