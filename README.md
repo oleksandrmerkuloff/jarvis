@@ -2,6 +2,8 @@ Jarvis is a task manager that was created from a task from roadmap.sh to create 
 At the moment, everything Jarvis can do is described below in the start message, but in general there are many possibilities to modify it: replace json file with sql database, connect pandas,
 add functionality in the form of commands, and so on. While the project is in the basic configuration and frozen, but in the long run 100% will improve.
 
+Challenge link: https://roadmap.sh/projects/task-tracker
+
 """
     Good day sir, my name's Jarvis and I'm your task manager.
     I'm currently in development and you may not have all of my features.
