@@ -12,6 +12,7 @@ class Jarvis:
     I'm currently in development and you may not have all of my features.
     Here list of command for work with me:
         'help' - show this message again;
+        'show' - show tasks list;
         'settings' - show and change your settings;
         'create' - load create task algorithm;
         'update' - load update task algorithm;
@@ -95,12 +96,25 @@ class Jarvis:
             if update_request.lower() == 'y':
                 self.save_tasks()
 
+    def show_tasks(self, task_status):
+        for task_id, task in self.tasks.items():
+            if task_status != 'full' and task['status'] != task_status:
+                continue
+            print()
+            for key, info in task.items():
+                print(f'{key.title()}: {info}')
+        print()
+
     def run(self):
         print(self.START_MESSAGE)
         while True:
             user_request = input('Wait for your commands here: ').lower()
             if user_request == 'help':
                 print(self.START_MESSAGE)
+            elif user_request == 'show':
+                print('Do you want to see full list of tasks or with special status: ')
+                task_status = input('Type "full" or special status here: ')
+                self.show_tasks(task_status)
             elif user_request == 'create':
                 self.create_task()
             elif user_request == 'update':
