@@ -54,10 +54,10 @@ class Jarvis:
         return datetime.now().strftime('%Y:%m:%d %H:%M')
 
     def collect_task_data(self):
-        title = input("Enter task title: ")
-        description = input("Enter task description: ")
-        status = input("Enter task status: ")
-        theme = input("Enter task theme: ")
+        title = input("Enter task title: ").strip()
+        description = input("Enter task description: ").strip()
+        status = input("Enter task status: ").strip()
+        theme = input("Enter task theme: ").strip()
         data = {
             'title': title,
             'description': description,
@@ -79,7 +79,7 @@ class Jarvis:
         if self.autoupdate_data_file:
             self.save_tasks()
         else:
-            update_request = input('Do you want to update data file?(y/n)\n')
+            update_request = input('Do you want to update data file?(y/n)\n').strip()
             if update_request.lower() == 'y':
                 self.save_tasks()
 
@@ -88,13 +88,13 @@ class Jarvis:
             print('I doesn\'t have any task yet!')
             return
         print('Columns: title, description, status, theme')
-        to_update = input('Enter what column whould you like to update: ').lower()
+        to_update = input('Enter what column whould you like to update: ').lower().strip()
 
         if to_update not in self.tasks[task_id].keys():
             print("Wrong column, try again")
             return False
 
-        new_data = input('Write new data for this column: ')
+        new_data = input('Write new data for this column: ').strip()
         self.tasks[task_id][to_update] = new_data
         self.tasks[task_id]['updated_date'] = self.get_current_date()
 
@@ -105,14 +105,15 @@ class Jarvis:
             if update_request.lower() == 'y':
                 self.save_tasks()
 
-    def show_tasks(self, task_status):
+    def show_tasks(self, task_optional):
         if not self.tasks:
             print('I doesn\'t have any task yet!')
             return
         for task_id, task in self.tasks.items():
-            if (task_status != 'full' and
-               task['status'].lower() != task_status.lower()):
-                continue
+            if task_optional != 'all':
+                if (task['status'].lower() != task_optional.lower() and
+                   task['theme'].lower() != task_optional.lower()):
+                    continue
             print()
             print(f'Task id: {task_id}')
             for key, info in task.items():
@@ -129,7 +130,7 @@ class Jarvis:
                 self.data_file_update()
             elif user_request == 'show':
                 print('Do you want to see full list of tasks or with special status: ')
-                task_status = input('Type "full" or special status here: ')
+                task_status = input('Type "all" or special status/theme here: ')
                 self.show_tasks(task_status)
             elif user_request == 'create':
                 self.create_task()
