@@ -16,6 +16,7 @@ class Jarvis:
         'show' - show tasks list;
         'create' - load create task algorithm;
         'update' - load update task algorithm;
+        'delete' - delete selected task;
         'clear' - for clear your screen;
         'exit' - if you need to go use this command;
     """
@@ -105,6 +106,22 @@ class Jarvis:
             if update_request.lower() == 'y':
                 self.save_tasks()
 
+    def delete_task(self, task_id):
+        task_title = self.tasks[task_id]['title']
+        confirm_request = input(f'Are you sure about deleting: {task_title} task? y/n\n').lower().strip()
+
+        if confirm_request == 'y':
+            del self.tasks[task_id]
+
+            if self.autoupdate_data_file:
+                self.save_tasks()
+            else:
+                update_request = input('Do you want to update data file?(y/n)\n')
+                if update_request.lower() == 'y':
+                    self.save_tasks()
+        else:
+            print('Confirmation error, operation cancelled....')
+
     def show_tasks(self, task_optional):
         if not self.tasks:
             print('I doesn\'t have any task yet!')
@@ -114,6 +131,9 @@ class Jarvis:
                 if (task['status'].lower() != task_optional.lower() and
                    task['theme'].lower() != task_optional.lower()):
                     continue
+                if task['theme'].lower() == task_optional.lower():
+                    if task['status'].lower() == 'done':
+                        continue
             print()
             print(f'Task id: {task_id}')
             for key, info in task.items():
@@ -123,7 +143,7 @@ class Jarvis:
     def run(self):
         print(self.START_MESSAGE)
         while True:
-            user_request = input('Wait for your commands here: ').lower()
+            user_request = input('Wait for your commands here: ').lower().strip()
             if user_request == 'help':
                 print(self.START_MESSAGE)
             elif user_request == 'skip update':
@@ -135,8 +155,11 @@ class Jarvis:
             elif user_request == 'create':
                 self.create_task()
             elif user_request == 'update':
-                task_id = input('Enter task id: ')
+                task_id = input('Enter task id: ').strip()
                 self.update_task(task_id)
+            elif user_request == 'delete':
+                task_id = input('Enter task id: ').strip()
+                self.delete_task(task_id)
             elif user_request == 'clear':
                 Jarvis.clear()
             elif user_request == 'exit':

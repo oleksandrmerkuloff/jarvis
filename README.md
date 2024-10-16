@@ -13,6 +13,7 @@ Challenge link: https://roadmap.sh/projects/task-tracker
         'show' - show tasks list;
         'create' - load create task algorithm;
         'update' - load update task algorithm;
+        'delete' - delete selected task;
         'clear' - for clear your screen;
         'exit' - if you need to go use this command;
     """
