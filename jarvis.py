@@ -72,7 +72,7 @@ class Jarvis:
     def create_task(self):
         task_data = self.collect_task_data()
         if self.tasks.keys():
-            task_id = int(max(self.tasks)) + 1
+            task_id = int(list(self.tasks.keys())[-1]) + 1
         else:
             task_id = 1
         self.tasks[str(task_id)] = task_data
