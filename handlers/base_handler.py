@@ -1,12 +1,13 @@
-from typing import Optional
+from typing import Optional, Any
 
+from sqlalchemy import select
 from sqlalchemy.orm import Session, DeclarativeMeta
 from sqlalchemy.exc import NoResultFound, SQLAlchemyError
 from sqlalchemy.orm.exc import ObjectDeletedError
 
 
 class BaseHandler:
-    def __init__(self, db: Session, model: DeclarativeMeta) -> None:
+    def __init__(self, db: Session, model: DeclarativeMeta = None) -> None:
         self.db = db
         self.model = model
 
@@ -14,6 +15,22 @@ class BaseHandler:
         record = self.db.get(self.model, id)
         if not record:
             raise NoResultFound('Record doesn\'t exist.')
+        return record
+
+    def get_record_by_attr(
+            self,
+            key: str,
+            value: Any
+            ) -> Optional[DeclarativeMeta]:
+
+        if not hasattr(self.model, key):
+            raise AttributeError('Model doesn\'t have this attr!')
+
+        stmt = select(self.model).where(getattr(self.model, key) == value)
+        record = self.db.execute(stmt).scalar_one_or_none()
+
+        if not record:
+            raise NoResultFound(f"No record found for {key} = {value}")
         return record
 
     def add_record(self, data: dict) -> bool:
